@@ -14,9 +14,11 @@
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
+
       <el-form-item label="排序">
         <el-input v-model="form.sort_order" />
       </el-form-item>
+
       <el-form-item label="位置">
         <el-select v-model="form.position" style="width: 100%;" placeholder="请选择广告位置" @change="handlePositionChange">
           <el-option
@@ -27,18 +29,48 @@
           />
         </el-select>
       </el-form-item>
-      <!-- 第一广告位配置 -->
-      <section v-if="positionSelected === 0">
-        <el-form-item label="类别">
-          <el-select v-model="form.type" style="width: 100%;" placeholder="请选择关联类别" @change="handleTypeChange">
-            <el-option
-              v-for="item in typeItems"
-              :key="item._id"
-              :label="item.title"
-              :value="item._id"
-            />
-          </el-select>
-        </el-form-item>
+
+      <el-form-item label="类别">
+        <el-select v-model="form.type" style="width: 100%;" placeholder="请选择类别" @change="handleTypeChange">
+          <el-option
+            v-for="item in typeItems"
+            :key="item._id"
+            :label="item.title"
+            :value="item._id"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="链接类型">
+        <el-select v-model="form.link_type" style="width: 100%;" placeholder="请选择链接类型" @change="handleLinkTypeChange">
+          <el-option
+            v-for="item in linkItems"
+            :key="item._id"
+            :label="item.title"
+            :value="item._id"
+          />
+        </el-select>
+      </el-form-item>
+
+      <!-- 链接到列表 -->
+      <section v-if="form.link_type === 0">
+        <!-- 链接到家具需要选择风格 -->
+        <section v-if="form.type === 0">
+          <el-form-item label="风格">
+            <el-select v-model="form.style_id" style="width: 100%;" placeholder="请选择关联风格" @change="handleStyleChange">
+              <el-option
+                v-for="item in styleItems"
+                :key="item._id"
+                :label="item.title"
+                :value="item._id"
+              />
+            </el-select>
+          </el-form-item>
+        </section>
+      </section>
+
+      <!-- 链接到详情 -->
+      <section v-else>
         <el-form-item label="标题">
           <el-select
             v-model="form.product_id"
@@ -55,19 +87,6 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-      </section>
-      <!-- 第二广告位配置 -->
-      <section v-else>
-        <el-form-item label="风格">
-          <el-select v-model="form.style_id" style="width: 100%;" placeholder="请选择关联风格" @change="handleStyleChange">
-            <el-option
-              v-for="item in styleItems"
-              :key="item._id"
-              :label="item.title"
-              :value="item._id"
             />
           </el-select>
         </el-form-item>
@@ -97,6 +116,10 @@ export default {
         { _id: 0, title: '第一广告位' },
         { _id: 1, title: '第二广告位' }
       ],
+      linkItems: [
+        { _id: 0, title: '列表页' },
+        { _id: 1, title: '详情页' }
+      ],
       typeItems: [
         { _id: 0, title: '家具' },
         { _id: 1, title: '案例' },
@@ -106,20 +129,20 @@ export default {
       form: {
         cover: '',
         sort_order: 1,
-        position: '',
-        // 第一广告位
-        type: '',
-        product_id: '',
-        product_title: '',
-        // 第二广告位
+        position: '', // 位置（第一广告位，第二广告位）
+        type: '', // 类型（商品，案例，设计师）
+        link_type: '', // 链接类型（列表，详情）
+        // 列表
         style_id: '',
-        style_title: ''
+        style_title: '',
+        // 详情
+        product_id: '',
+        product_title: ''
       },
       options: [],
       value: [],
       list: [],
-      loading: false,
-      positionSelected: 0
+      loading: false
     }
   },
   computed: {
@@ -181,12 +204,13 @@ export default {
         this.form.cover = result.cover
         this.form.sort_order = result.sort_order.toString()
         this.form.position = result.position
+        this.form.link_type = result.link_type
         this.form.type = result.type
         // this.form.product_id = result.product_id
         this.form.product_title = result.product_title
         this.form.style_id = result.style_id
         this.form.style_title = result.style_title
-        this.positionSelected = result.position
+        // this.positionSelected = result.position
       })
     },
     /**
@@ -238,19 +262,28 @@ export default {
       }
       return isLt500KB
     },
-    handleTypeChange(item) {
-      this.form.product_id = ''
-      this.options = []
-    },
     handlePositionChange(item) {
-      this.positionSelected = item
+      // this.positionSelected = item
+      // if (item === 0) {
+      //   this.form.type = ''
+      //   this.form.product_id = ''
+      //   this.form.product_title = ''
+      // } else {
+      //   this.form.style_id = ''
+      //   this.form.style_title = ''
+      // }
+    },
+    handleTypeChange(item) {
+      // this.form.product_id = ''
+      // this.options = []
+    },
+    handleLinkTypeChange(item) {
       if (item === 0) {
-        this.form.type = ''
-        this.form.product_id = ''
-        this.form.product_title = ''
-      } else {
         this.form.style_id = ''
         this.form.style_title = ''
+      } else {
+        this.form.product_id = ''
+        this.form.product_title = ''
       }
     },
     handleStyleChange(item) {

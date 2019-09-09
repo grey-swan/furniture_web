@@ -64,6 +64,21 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="链接类型"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <section v-if="scope.row.position == 0">
+            <el-tag v-if="scope.row.link_type == 0">列表页</el-tag>
+            <el-tag v-else>详情页</el-tag>
+          </section>
+          <section v-else>
+            <el-tag v-if="scope.row.link_type == 0" type="danger">列表页</el-tag>
+            <el-tag v-else type="danger">详情页</el-tag>
+          </section>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="类别/风格"
         align="center"
       >
