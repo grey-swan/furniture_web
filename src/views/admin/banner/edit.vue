@@ -30,17 +30,6 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="类别">
-        <el-select v-model="form.type" style="width: 100%;" placeholder="请选择类别" @change="handleTypeChange">
-          <el-option
-            v-for="item in typeItems"
-            :key="item._id"
-            :label="item.title"
-            :value="item._id"
-          />
-        </el-select>
-      </el-form-item>
-
       <el-form-item label="链接类型">
         <el-select v-model="form.link_type" style="width: 100%;" placeholder="请选择链接类型" @change="handleLinkTypeChange">
           <el-option
@@ -54,6 +43,17 @@
 
       <!-- 链接到列表 -->
       <section v-if="form.link_type === 0">
+        <!-- 选择类别（商品、案例和设计师） -->
+        <el-form-item label="类别">
+          <el-select v-model="form.type" style="width: 100%;" placeholder="请选择类别" @change="handleTypeChange">
+            <el-option
+              v-for="item in typeItems"
+              :key="item._id"
+              :label="item.title"
+              :value="item._id"
+            />
+          </el-select>
+        </el-form-item>
         <!-- 链接到家具需要选择风格 -->
         <section v-if="form.type === 0">
           <el-form-item label="风格">
@@ -70,7 +70,18 @@
       </section>
 
       <!-- 链接到详情 -->
-      <section v-else>
+      <section v-else-if="form.link_type === 1">
+        <!-- 选择类别（商品、案例和设计师） -->
+        <el-form-item label="类别">
+          <el-select v-model="form.type" style="width: 100%;" placeholder="请选择类别" @change="handleTypeChange">
+            <el-option
+              v-for="item in typeItems"
+              :key="item._id"
+              :label="item.title"
+              :value="item._id"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="标题">
           <el-select
             v-model="form.product_id"
@@ -91,6 +102,9 @@
           </el-select>
         </el-form-item>
       </section>
+
+      <!-- 静态页，只有一张图片，不会跳转 -->
+      <section v-else />
 
       <el-form-item>
         <el-button @click="handleBack">取消</el-button>
@@ -118,7 +132,8 @@ export default {
       ],
       linkItems: [
         { _id: 0, title: '列表页' },
-        { _id: 1, title: '详情页' }
+        { _id: 1, title: '详情页' },
+        { _id: 2, title: '静态页' }
       ],
       typeItems: [
         { _id: 0, title: '家具' },
@@ -281,7 +296,13 @@ export default {
       if (item === 0) {
         this.form.style_id = ''
         this.form.style_title = ''
+      } else if (item === 1) {
+        this.form.product_id = ''
+        this.form.product_title = ''
       } else {
+        this.form.type = ''
+        this.form.style_id = ''
+        this.form.style_title = ''
         this.form.product_id = ''
         this.form.product_title = ''
       }

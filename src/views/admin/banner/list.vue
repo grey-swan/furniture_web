@@ -70,11 +70,13 @@
         <template slot-scope="scope">
           <section v-if="scope.row.position == 0">
             <el-tag v-if="scope.row.link_type == 0">列表页</el-tag>
-            <el-tag v-else>详情页</el-tag>
+            <el-tag v-else-if="scope.row.link_type == 1">详情页</el-tag>
+            <el-tag v-else>静态页</el-tag>
           </section>
           <section v-else>
             <el-tag v-if="scope.row.link_type == 0" type="danger">列表页</el-tag>
-            <el-tag v-else type="danger">详情页</el-tag>
+            <el-tag v-else-if="scope.row.link_type == 1" type="danger">详情页</el-tag>
+            <el-tag v-else type="danger">静态页</el-tag>
           </section>
         </template>
       </el-table-column>
