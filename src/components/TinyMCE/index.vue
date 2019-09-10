@@ -70,3 +70,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .w-e-text-container{
+    height: 500px !important;
+  }
+</style>
