@@ -54,6 +54,7 @@
         class="toolbar"
       >
         <el-pagination
+          small
           :page-size="page_size"
           :total="total"
           :current-page.sync="page"

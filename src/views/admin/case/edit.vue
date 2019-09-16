@@ -33,7 +33,7 @@
         <el-input v-model="form.area" />
       </el-form-item>
       <el-form-item label="风格">
-        <el-select v-model="form.style_id" style="width: 100%;" placeholder="请选择风格">
+        <el-select v-model="form.style_id" multiple style="width: 100%;" placeholder="请选择风格">
           <el-option
             v-for="item in styleItems"
             :key="item._id"
