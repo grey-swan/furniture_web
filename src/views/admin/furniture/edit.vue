@@ -27,6 +27,9 @@
       <el-form-item label="副标题">
         <el-input v-model="form.subtitle" />
       </el-form-item>
+      <el-form-item label="顺序">
+        <el-input v-model="form.sort_order" />
+      </el-form-item>
       <el-form-item label="价格">
         <el-input v-model="form.price" />
       </el-form-item>
@@ -79,6 +82,7 @@ export default {
       form: {
         title: '',
         subtitle: '',
+        sort_order: 0,
         price: 0,
         img: [],
         content: '',
@@ -119,6 +123,7 @@ export default {
         const result = response.result
         this.form.title = result.title
         this.form.subtitle = result.subtitle
+        this.form.sort_order = result.sort_order
         this.form.img = result.img
         this.form.content = result.content
         this.form.category_id = result.category_id

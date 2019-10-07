@@ -26,6 +26,9 @@
       <el-form-item label="副标题">
         <el-input v-model="form.subtitle" />
       </el-form-item>
+      <el-form-item label="顺序">
+        <el-input v-model="form.sort_order" />
+      </el-form-item>
       <el-form-item label="楼盘">
         <el-input v-model="form.building" />
       </el-form-item>
@@ -33,7 +36,7 @@
         <el-input v-model="form.area" />
       </el-form-item>
       <el-form-item label="风格">
-        <el-select v-model="form.style_id" multiple style="width: 100%;" placeholder="请选择风格">
+        <el-select v-model="form.style_id" style="width: 100%;" placeholder="请选择风格">
           <el-option
             v-for="item in styleItems"
             :key="item._id"
@@ -70,11 +73,12 @@ export default {
       form: {
         title: '',
         subtitle: '',
+        sort_order: 0,
         building: '',
         area: '',
         img: [],
         content: '',
-        style_id: []
+        style_id: ''
       },
       reload: false,
       styleItems: [],
@@ -107,6 +111,7 @@ export default {
         const result = response.result
         this.form.title = result.title
         this.form.subtitle = result.subtitle
+        this.form.sort_order = result.sort_order
         this.form.img = result.img
         this.form.building = result.building
         this.form.area = result.area

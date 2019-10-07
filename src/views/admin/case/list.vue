@@ -54,6 +54,7 @@
       highlight-current-row
       style="width: 100%;"
       border
+      @sort-change="handleSortChange"
     >
       <el-table-column
         type="index"
@@ -64,6 +65,12 @@
       <el-table-column
         prop="title"
         label="标题"
+        align="center"
+      />
+      <el-table-column
+        prop="sort_order"
+        label="顺序"
+        sortable="custom"
         align="center"
       />
       <el-table-column
@@ -159,7 +166,10 @@ export default {
     },
     /** 获取列表 */
     fetchList() {
-      const params = '?page=' + this.page + '&title=' + this.filter.title
+      var params = '?page=' + this.page + '&title=' + this.filter.title
+      if (this.filter.order) {
+        params = params + '&sort_order=order__' + this.filter.order
+      }
       this.listLoading = true
       apiList(this.pkg, this.func, params).then(response => {
         const result = response.result
@@ -168,11 +178,8 @@ export default {
         this.page_size = result.per_page
         this.page = result.page
         this.items.forEach(element => {
-          element.styleTitle = ''
-          element.style_id.forEach(element2 => {
-            const style = getStyleById(element2)
-            element.styleTitle += style.title + ' | '
-          })
+          const style = getStyleById(element.style_id)
+          element.styleTitle = style.title
         })
         this.listLoading = false
       })
@@ -200,6 +207,19 @@ export default {
           this.fetchList()
         })
       })
+    },
+    /**
+     * 排序，只能用于sort_order列
+     */
+    handleSortChange(column) {
+      if (column.order === 'descending') {
+        this.filter.order = 'desc'
+      } else if (column.order === 'ascending') {
+        this.filter.order = 'asc'
+      } else {
+        this.filter.order = null
+      }
+      this.fetchList()
     }
   }
 }
